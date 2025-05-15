@@ -7,7 +7,7 @@ import Navbar from "@/components/magicui/menu";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import  Footer  from "@/components/magicui/footer";
 import WhatsappFloatingButton from '@/components/magicui/whatsapp';
-import PreloaderAnimation from "@/components/magicui/loading";
+
 
 // URL base para imágenes
 const IMAGE_BASE = 'https://pszegostki-linberassistant.onrender.com';
@@ -99,7 +99,7 @@ function PropertyCard({
 
   return (
     <>
-      <PreloaderAnimation/>
+      
       <motion.div
 
         layout
