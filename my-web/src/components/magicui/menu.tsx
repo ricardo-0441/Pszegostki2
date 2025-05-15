@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [, setIsScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {

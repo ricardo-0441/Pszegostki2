@@ -3,7 +3,6 @@ import Navbar from "@/components/magicui/menu";
 import { TestimonialsMarquee } from "@/components/magicui/opinion";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import HeroSection from "@/components/magicui/hero";
-import Services from "@/components/magicui/services";
 import Footer from "@/components/magicui/footer";
 import PropertyCarousel from "@/components/magicui/property";
 import WhatsappFloatingButton from "@/components/magicui/whatsapp";

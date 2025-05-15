@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Home, Building, MapPin, Calendar, Tag, MessageCircle, X } from 'lucide-react';
+import { useState, useEffect,  } from 'react';
+import { ChevronLeft, ChevronRight, Home, Building, MapPin, Calendar, MessageCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from "@/components/magicui/menu";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
