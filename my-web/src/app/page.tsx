@@ -9,14 +9,14 @@ import WhatsappFloatingButton from "@/components/magicui/whatsapp";
 import TeamSection from "@/components/magicui/staff";
 import Logos from "@/components/magicui/sponsor";
 import RealEstateCTA from "@/components/magicui/call-action";
-import PreloaderAnimation from "@/components/magicui/loading";
+
 export default function Page() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Cursor animado */}
       <SmoothCursor />
       {/* Preloader */}
-      < PreloaderAnimation/>
+      
       {/* Menú principal */}
       <header className="w-full">
         <Navbar />
