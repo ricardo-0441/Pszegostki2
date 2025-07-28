@@ -1,31 +1,40 @@
 "use client";
 
-import { useState, useEffect,  } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Home, Building, MapPin, Calendar, MessageCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from "@/components/magicui/menu";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
-import  Footer  from "@/components/magicui/footer";
+import Footer from "@/components/magicui/footer";
 import WhatsappFloatingButton from '@/components/magicui/whatsapp';
 
-// URL base para el API (mantén tu servidor para los datos)
+// URL base para el API
 const API_BASE = 'https://pszegostki-linberassistant.onrender.com';
 
 // Función para manejar las URLs de imágenes
 function getImageUrl(imageUrl: string | null): string[] {
   if (!imageUrl) {
-    // Imagen placeholder desde Cloudinary o una imagen por defecto
     return ['https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg'];
   }
 
-  // Si la URL ya contiene cloudinary, la usamos directamente
   if (imageUrl.includes('cloudinary.com')) {
-    return imageUrl.split(',').map(url => url.trim());
+    return imageUrl.split(',').map(url => url.trim()).filter(url => url.length > 0);
   }
 
-  // Si es una URL relativa del servidor anterior, la convertimos a placeholder
-  // (esto es para compatibilidad con datos antiguos)
   return ['https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg'];
+}
+
+// Función para manejar las URLs de videos
+function getVideoUrl(videoUrl: string | null): string[] {
+  if (!videoUrl) {
+    return [];
+  }
+
+  if (videoUrl.includes('cloudinary.com')) {
+    return videoUrl.split(',').map(url => url.trim()).filter(url => url.length > 0);
+  }
+
+  return [];
 }
 
 // -----------------------
@@ -55,7 +64,6 @@ function PropertyImageCarousel({ images, onClose }: { images: string[]; onClose:
             initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.3 }}
             onError={(e) => {
-              // Fallback en caso de error al cargar la imagen
               (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
             }}
           />
@@ -106,6 +114,7 @@ function PropertyCard({
 }) {
   const Icon = property.tipo_juliano === 'casa' ? Home : Building;
   const images = getImageUrl(property.imagen_url);
+  const videos = getVideoUrl(property.video_url);
   const dateStr = new Date(property.created_at).toLocaleDateString('es-ES', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
@@ -138,9 +147,9 @@ function PropertyCard({
           <span className="absolute top-2 right-2 bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
             {property.es_alquiler ? 'Alquiler' : 'Venta'}
           </span>
-          {property.video_url && (
+          {videos.length > 0 && (
             <span className="absolute top-2 left-2 bg-red-500/90 text-white px-2 py-1 rounded-full text-xs font-medium">
-              📹 Video
+              📹 Video{videos.length > 1 ? `s (${videos.length})` : ''}
             </span>
           )}
         </div>
@@ -168,32 +177,43 @@ function PropertyCard({
                 <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{property.descripcion}</p>
                 
                 {/* Galería de imágenes */}
-                <div className="flex gap-2 overflow-x-auto mb-3 pb-2">
-                  {images.map((src, i) => (
-                    <img
-                      key={i}
-                      src={src}
-                      alt={`Foto ${i + 1}`}
-                      className="h-16 w-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
-                      onClick={(e) => { e.stopPropagation(); setShowCarousel(true); }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
-                      }}
-                    />
-                  ))}
-                </div>
+                {images.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto mb-3 pb-2">
+                    {images.map((src, i) => (
+                      <img
+                        key={i}
+                        src={src}
+                        alt={`Foto ${i + 1}`}
+                        className="h-16 w-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
+                        onClick={(e) => { e.stopPropagation(); setShowCarousel(true); }}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
 
-                {/* Video si existe */}
-                {property.video_url && (
-                  <div className="mb-3">
-                    <video 
-                      controls 
-                      className="w-full h-32 object-cover rounded"
-                      poster={images[0]}
-                    >
-                      <source src={property.video_url} type="video/mp4" />
-                      Tu navegador no soporta video HTML5.
-                    </video>
+                {/* Videos si existen */}
+                {videos.length > 0 && (
+                  <div className="mb-3 space-y-3">
+                    {videos.map((videoSrc, i) => (
+                      <div key={i} className="relative">
+                        <video 
+                          controls 
+                          className="w-full h-32 object-cover rounded"
+                          poster={images[0]}
+                        >
+                          <source src={videoSrc} type="video/mp4" />
+                          Tu navegador no soporta video HTML5.
+                        </video>
+                        {videos.length > 1 && (
+                          <span className="absolute top-1 left-1 bg-black/50 text-white text-xs px-1 rounded">
+                            Video {i + 1}/{videos.length}
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
 
