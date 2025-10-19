@@ -63,7 +63,7 @@ export default function HeroGeometric({
       transition: {
         duration: 1,
         delay: 0.3 + i * 0.2,
-        ease: "easeInOut",
+        ease: cubicBezier(0.25, 0.4, 0.25, 1),
       },
     }),
   }
