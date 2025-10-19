@@ -1,7 +1,13 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
+
+type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+const Link: React.FC<LinkProps> = ({ href, children, ...props }) => (
+  <a href={href} {...props}>
+    {children}
+  </a>
+);
 
 // === ICONS ===
 const IconFingerprint: React.FC = () => (

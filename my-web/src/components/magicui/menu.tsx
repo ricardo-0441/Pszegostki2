@@ -1,8 +1,14 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
+
+type LinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string };
+const Link: React.FC<LinkProps> = ({ href, children, ...props }) => (
+  <a href={href} {...props}>
+    {children}
+  </a>
+);
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -65,21 +71,21 @@ export default function Navbar() {
           aria-label="Toggle menu"
         >
           <motion.span
-            className="block w-6 h-0.5 bg-black mb-1"
+            style={{ display: 'block', width: '1.5rem', height: '0.125rem', backgroundColor: 'black', marginBottom: '0.25rem' }}
             animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 6 : 0 }}
           />
           <motion.span
-            className="block w-6 h-0.5 bg-black mb-1"
+            style={{ display: 'block', width: '1.5rem', height: '0.125rem', backgroundColor: 'black', marginBottom: '0.25rem' }}
             animate={{ opacity: menuOpen ? 0 : 1 }}
           />
           <motion.span
-            className="block w-6 h-0.5 bg-black"
+            style={{ display: 'block', width: '1.5rem', height: '0.125rem', backgroundColor: 'black' }}
             animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -6 : 0 }}
           />
         </button>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -87,7 +93,7 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-gray-200 overflow-hidden"
+            style={{ backgroundColor: '#e5e7eb', overflow: 'hidden' }}
           >
             <div className="flex flex-col items-center py-4 space-y-4">
               {navItems.map((item) => (
@@ -102,8 +108,7 @@ export default function Navbar() {
             </div>
           </motion.div>
         )}
-          </AnimatePresence>
-        </nav>
-      )
-    }
-
+      </AnimatePresence>
+    </nav>
+  )
+}

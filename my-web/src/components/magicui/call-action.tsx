@@ -30,15 +30,16 @@ export default function RealEstateCTA() {
             {words.map((word, wi) => (
               <span key={wi} className="inline-block mr-3 last:mr-0">
                 {word.split("").map((letter, li) => (
-                  <motion.span
-                    key={`${wi}-${li}`}
-                    initial={{ y: 80, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: wi * 0.1 + li * 0.02, type: "spring", stiffness: 140 }}
-                    className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 to-neutral-700/80 dark:from-white dark:to-white/80"
-                  >
-                    {letter}
-                  </motion.span>
+                  <span key={`${wi}-${li}`} className="inline-block text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 to-neutral-700/80 dark:from-white dark:to-white/80">
+                    <motion.span
+                      initial={{ y: 80, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: wi * 0.1 + li * 0.02, type: "spring", stiffness: 140 }}
+                      style={{ display: "inline-block" }}
+                    >
+                      {letter}
+                    </motion.span>
+                  </span>
                 ))}
               </span>
             ))}

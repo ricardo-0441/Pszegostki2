@@ -44,8 +44,15 @@ export default function PreloaderAnimation() {
     <AnimatePresence>
       {opacity > 0 && (
         <motion.div
-          className="fixed inset-0 flex items-center justify-center bg-white"
-          style={{ zIndex: 999 }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            zIndex: 999
+          }}
           initial={{ opacity: 1 }}
           animate={{ opacity }}
           exit={{ opacity: 0 }}
@@ -59,7 +66,7 @@ export default function PreloaderAnimation() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.04, duration: 0.3 }}
-                  className="inline-block"
+                  style={{ display: 'inline-block' }}
                 >
                   {char === ' ' ? '\u00A0' : char}
                 </motion.span>
@@ -68,13 +75,19 @@ export default function PreloaderAnimation() {
                 className={`inline-block w-1 h-6 bg-gray-900 ml-1 align-bottom ${
                   showCursor ? 'opacity-100' : 'opacity-0'
                 }`}
+                style={{ transition: 'opacity 0.1s' }}
               />
             </div>
             {isComplete && opacity > 0.5 && (
               <motion.div
-                className="mt-4 text-sm text-gray-500 italic"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.8 }}
+                style={{
+                  marginTop: '1rem',
+                  fontSize: '0.875rem',
+                  color: '#6b7280',
+                  fontStyle: 'italic'
+                }}
               >
                 Cargando sitio...
               </motion.div>

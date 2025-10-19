@@ -3,8 +3,6 @@
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-
-
 function ElegantShape({
   className,
   delay = 0,
@@ -25,23 +23,23 @@ function ElegantShape({
       initial={{ opacity: 0, y: -100, rotate: rotate - 10 }}
       animate={{ opacity: 1, y: 0, rotate }}
       transition={{ duration: 2, delay, ease: [0.23, 0.86, 0.39, 0.96] }}
-      className={cn("absolute", className)}
     >
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        style={{ width, height }}
-        className="relative"
-      >
-        <div
-          className={cn(
-            "absolute inset-0 rounded-full",
-            "bg-gradient-to-r to-transparent",
-            gradient,
-            "shadow-lg",
-          )}
-        />
-      </motion.div>
+      <div className={cn("absolute", className)}>
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          style={{ width, height }}
+        >
+          <div
+            className={cn(
+              "absolute inset-0 rounded-full",
+              "bg-gradient-to-r to-transparent",
+              gradient,
+              "shadow-lg",
+            )}
+          />
+        </motion.div>
+      </div>
     </motion.div>
   )
 }
@@ -65,23 +63,23 @@ export default function HeroGeometric({
   }
 
   return (
-    
-<div className="relative w-full flex items-center justify-center overflow-hidden bg-white text-gray-900 pt-20" id="inicio">
-  {/* Suaves formas geométricas de fondo */}
-  <div className="absolute inset-0 overflow-hidden">
-    <ElegantShape delay={0.2} width={500} height={100} rotate={10} className="left-[-10%] top-[20%]" />
-    <ElegantShape delay={0.4} width={400} height={80} rotate={-15} className="right-[-5%] top-[60%]" />
-  </div>
+    <div className="relative w-full flex items-center justify-center overflow-hidden bg-white text-gray-900 pt-20" id="inicio">
+      {/* Suaves formas geométricas de fondo */}
+      <div className="absolute inset-0 overflow-hidden">
+        <ElegantShape delay={0.2} width={500} height={100} rotate={10} className="left-[-10%] top-[20%]" />
+        <ElegantShape delay={0.4} width={400} height={80} rotate={-15} className="right-[-5%] top-[60%]" />
+      </div>
 
-  <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 text-center">
+      <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 text-center">
         <motion.div
           custom={0}
           variants={fadeUpVariants}
           initial="hidden"
           animate="visible"
-          className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-gray-100 border border-gray-200 mb-6"
         >
-          <span className="text-sm text-gray-600 tracking-wide">{badge}</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-gray-100 border border-gray-200 mb-6">
+            <span className="text-sm text-gray-600 tracking-wide">{badge}</span>
+          </div>
         </motion.div>
 
         <motion.div custom={1} variants={fadeUpVariants} initial="hidden" animate="visible">
