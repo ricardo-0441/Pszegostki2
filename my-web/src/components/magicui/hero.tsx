@@ -1,8 +1,9 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, cubicBezier } from "framer-motion"
 import { cn } from "@/lib/utils"
 
+// 🔹 Forma animada elegante de fondo
 function ElegantShape({
   className,
   delay = 0,
@@ -22,7 +23,7 @@ function ElegantShape({
     <motion.div
       initial={{ opacity: 0, y: -100, rotate: rotate - 10 }}
       animate={{ opacity: 1, y: 0, rotate }}
-      transition={{ duration: 2, delay, ease: [0.23, 0.86, 0.39, 0.96] }}
+      transition={{ duration: 2, delay, ease: cubicBezier(0.23, 0.86, 0.39, 0.96) }}
     >
       <div className={cn("absolute", className)}>
         <motion.div
@@ -35,7 +36,7 @@ function ElegantShape({
               "absolute inset-0 rounded-full",
               "bg-gradient-to-r to-transparent",
               gradient,
-              "shadow-lg",
+              "shadow-lg"
             )}
           />
         </motion.div>
@@ -44,6 +45,7 @@ function ElegantShape({
   )
 }
 
+// 🔹 Hero principal
 export default function HeroGeometric({
   badge = "Inmuebles y Seguros",
   title1 = "Ricardo Pszegotski",
@@ -58,25 +60,40 @@ export default function HeroGeometric({
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { duration: 1, delay: 0.3 + i * 0.2, ease: [0.25, 0.4, 0.25, 1] },
+      transition: {
+        duration: 1,
+        delay: 0.3 + i * 0.2,
+        ease: "easeInOut",
+      },
     }),
   }
 
   return (
-    <div className="relative w-full flex items-center justify-center overflow-hidden bg-white text-gray-900 pt-20" id="inicio">
-      {/* Suaves formas geométricas de fondo */}
+    <div
+      className="relative w-full flex items-center justify-center overflow-hidden bg-white text-gray-900 pt-20"
+      id="inicio"
+    >
+      {/* 🔸 Fondos geométricos */}
       <div className="absolute inset-0 overflow-hidden">
-        <ElegantShape delay={0.2} width={500} height={100} rotate={10} className="left-[-10%] top-[20%]" />
-        <ElegantShape delay={0.4} width={400} height={80} rotate={-15} className="right-[-5%] top-[60%]" />
+        <ElegantShape
+          delay={0.2}
+          width={500}
+          height={100}
+          rotate={10}
+          className="left-[-10%] top-[20%]"
+        />
+        <ElegantShape
+          delay={0.4}
+          width={400}
+          height={80}
+          rotate={-15}
+          className="right-[-5%] top-[60%]"
+        />
       </div>
 
+      {/* 🔸 Contenido principal */}
       <div className="relative z-10 container mx-auto px-4 md:px-6 py-20 text-center">
-        <motion.div
-          custom={0}
-          variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <motion.div custom={0} variants={fadeUpVariants} initial="hidden" animate="visible">
           <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-gray-100 border border-gray-200 mb-6">
             <span className="text-sm text-gray-600 tracking-wide">{badge}</span>
           </div>
@@ -95,6 +112,7 @@ export default function HeroGeometric({
           <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
             Brindamos asesoramiento inmobiliario y seguros personalizados en Apóstoles, Misiones.
           </p>
+
           <div className="flex justify-center space-x-4">
             <a
               href="#servicios"
