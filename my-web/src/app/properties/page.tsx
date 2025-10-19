@@ -1,12 +1,70 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Home, Building, MapPin, Calendar, MessageCircle, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from "@/components/magicui/menu";
 import { SmoothCursor } from "@/components/ui/smooth-cursor";
 import Footer from "@/components/magicui/footer";
 import WhatsappFloatingButton from '@/components/magicui/whatsapp';
+
+// Iconos SVG personalizados
+const Icons = {
+  ChevronLeft: ({ size = 24 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  ),
+  ChevronRight: ({ size = 24 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  ),
+  Home: ({ size = 20, className = "" }: { size?: number; className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+  ),
+  Building: ({ size = 20, className = "" }: { size?: number; className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+      <path d="M9 22v-4h6v4"></path>
+      <path d="M8 6h.01"></path>
+      <path d="M16 6h.01"></path>
+      <path d="M12 6h.01"></path>
+      <path d="M12 10h.01"></path>
+      <path d="M12 14h.01"></path>
+      <path d="M16 10h.01"></path>
+      <path d="M16 14h.01"></path>
+      <path d="M8 10h.01"></path>
+      <path d="M8 14h.01"></path>
+    </svg>
+  ),
+  MapPin: ({ size = 14, className = "" }: { size?: number; className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+      <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+  ),
+  Calendar: ({ size = 12, className = "" }: { size?: number; className?: string }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+  ),
+  MessageCircle: ({ size = 16 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+  ),
+  X: ({ size = 24 }: { size?: number }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  ),
+};
 
 // URL base para el API
 const API_BASE = 'https://pszegostki-linberassistant.onrender.com';
@@ -42,53 +100,75 @@ function getVideoUrl(videoUrl: string | null): string[] {
 // -----------------------
 function PropertyImageCarousel({ images, onClose }: { images: string[]; onClose: () => void }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const next = (e: React.MouseEvent) => { e.stopPropagation(); setCurrentIndex(i => (i + 1) % images.length); };
-  const prev = (e: React.MouseEvent) => { e.stopPropagation(); setCurrentIndex(i => (i - 1 + images.length) % images.length); };
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  const next = (e: React.MouseEvent) => { 
+    e.stopPropagation(); 
+    setCurrentIndex(i => (i + 1) % images.length); 
+  };
+  
+  const prev = (e: React.MouseEvent) => { 
+    e.stopPropagation(); 
+    setCurrentIndex(i => (i - 1 + images.length) % images.length); 
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+    <div
+      className={`fixed inset-0 bg-black z-50 flex items-center justify-center p-4 transition-opacity duration-300 ${
+        isVisible ? 'bg-opacity-70' : 'bg-opacity-0'
+      }`}
       onClick={onClose}
     >
-      <button onClick={onClose} className="absolute top-4 right-4 bg-white/20 hover:bg-white/40 rounded-full p-2 text-white">
-        <X size={24} />
+      <button 
+        onClick={onClose} 
+        className="absolute top-4 right-4 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full p-2 text-white transition-colors"
+      >
+        <Icons.X size={24} />
       </button>
       <div className="relative w-full max-w-4xl h-full max-h-[80vh] flex items-center justify-center">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.img
-            key={currentIndex}
-            src={images[currentIndex]}
-            alt={`Foto ${currentIndex + 1}`}
-            className="max-h-full max-w-full object-contain"
-            initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3 }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
-            }}
-          />
-        </AnimatePresence>
+        <img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={`Foto ${currentIndex + 1}`}
+          className="max-h-full max-w-full object-contain transition-opacity duration-300"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
+          }}
+        />
+        
         {images.length > 1 && (
           <>
-            <button onClick={prev} className="absolute left-2 bg-white/20 hover:bg-white/40 rounded-full p-3 text-white">
-              <ChevronLeft size={24} />
+            <button 
+              onClick={prev} 
+              className="absolute left-2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full p-3 text-white transition-colors"
+            >
+              <Icons.ChevronLeft size={24} />
             </button>
-            <button onClick={next} className="absolute right-2 bg-white/20 hover:bg-white/40 rounded-full p-3 text-white">
-              <ChevronRight size={24} />
+            <button 
+              onClick={next} 
+              className="absolute right-2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full p-3 text-white transition-colors"
+            >
+              <Icons.ChevronRight size={24} />
             </button>
             <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
               {images.map((_, i) => (
                 <button
                   key={i}
                   onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
-                  className={`w-2 h-2 rounded-full ${i === currentIndex ? 'bg-white' : 'bg-white/40'}`}
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    i === currentIndex ? 'bg-white w-8' : 'bg-white bg-opacity-40'
+                  }`}
                 />
               ))}
             </div>
           </>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -112,7 +192,7 @@ function PropertyCard({
   isExpanded: boolean;
   onClick: (id: number) => void;
 }) {
-  const Icon = property.tipo_juliano === 'casa' ? Home : Building;
+  const Icon = property.tipo_juliano === 'casa' ? Icons.Home : Icons.Building;
   const images = getImageUrl(property.imagen_url);
   const videos = getVideoUrl(property.video_url);
   const dateStr = new Date(property.created_at).toLocaleDateString('es-ES', {
@@ -127,10 +207,9 @@ function PropertyCard({
 
   return (
     <>
-      <motion.div
-        layout
+      <div
         onClick={() => onClick(property.id)}
-        className="cursor-pointer bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+        className="cursor-pointer bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300"
       >
         <div className="relative h-48 w-full">
           <img 
@@ -144,11 +223,11 @@ function PropertyCard({
               }
             }}
           />
-          <span className="absolute top-2 right-2 bg-white/90 px-3 py-1 rounded-full text-sm font-medium">
+          <span className="absolute top-2 right-2 bg-white bg-opacity-90 px-3 py-1 rounded-full text-sm font-medium">
             {property.es_alquiler ? 'Alquiler' : 'Venta'}
           </span>
           {videos.length > 0 && (
-            <span className="absolute top-2 left-2 bg-red-500/90 text-white px-2 py-1 rounded-full text-xs font-medium">
+            <span className="absolute top-2 left-2 bg-red-500 bg-opacity-90 text-white px-2 py-1 rounded-full text-xs font-medium">
               📹 Video{videos.length > 1 ? `s (${videos.length})` : ''}
             </span>
           )}
@@ -156,92 +235,89 @@ function PropertyCard({
 
         <div className="p-4">
           <div className="flex items-center mb-1">
-            <Icon className="mr-2 text-gray-600" size={20} />
+            <div className="mr-2 text-gray-600">
+              <Icon size={20} />
+            </div>
             <h3 className="text-lg font-semibold capitalize text-gray-800">
               {property.tipo_juliano.replace('_', ' ')}
             </h3>
           </div>
           <div className="flex items-center text-gray-500 text-sm mb-2">
-            <MapPin className="mr-1" size={14} />
+            <div className="mr-1">
+              <Icons.MapPin size={14} />
+            </div>
             <span className="truncate">{property.location}</span>
           </div>
 
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }} 
-                animate={{ opacity: 1, height: 'auto' }} 
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{property.descripcion}</p>
-                
-                {/* Galería de imágenes */}
-                {images.length > 0 && (
-                  <div className="flex gap-2 overflow-x-auto mb-3 pb-2">
-                    {images.map((src, i) => (
-                      <img
-                        key={i}
-                        src={src}
-                        alt={`Foto ${i + 1}`}
-                        className="h-16 w-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
-                        onClick={(e) => { e.stopPropagation(); setShowCarousel(true); }}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {/* Videos si existen */}
-                {videos.length > 0 && (
-                  <div className="mb-3 space-y-3">
-                    {videos.map((videoSrc, i) => (
-                      <div key={i} className="relative">
-                        <video 
-                          controls 
-                          className="w-full h-32 object-cover rounded"
-                          poster={images[0]}
-                        >
-                          <source src={videoSrc} type="video/mp4" />
-                          Tu navegador no soporta video HTML5.
-                        </video>
-                        {videos.length > 1 && (
-                          <span className="absolute top-1 left-1 bg-black/50 text-white text-xs px-1 rounded">
-                            Video {i + 1}/{videos.length}
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center text-gray-500 text-xs mb-3">
-                  <Calendar className="mr-1" size={12} /> 
-                  Publicado: {dateStr}
+          {isExpanded && (
+            <div className="animate-fadeIn">
+              <p className="text-gray-700 text-sm mb-3 whitespace-pre-wrap">{property.descripcion}</p>
+              
+              {/* Galería de imágenes */}
+              {images.length > 0 && (
+                <div className="flex gap-2 overflow-x-auto mb-3 pb-2">
+                  {images.map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt={`Foto ${i + 1}`}
+                      className="h-16 w-24 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
+                      onClick={(e) => { e.stopPropagation(); setShowCarousel(true); }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://res.cloudinary.com/dv05qzzcm/image/upload/v1753105420/propiedades/placeholder.jpg';
+                      }}
+                    />
+                  ))}
                 </div>
-                
-                <a
-                  href={whatsappUrl}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors"
-                  onClick={e => e.stopPropagation()}
-                >
-                  <MessageCircle size={16} /> Consultar por WhatsApp
-                </a>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
+              )}
 
-      <AnimatePresence>
-        {showCarousel && (
-          <PropertyImageCarousel images={images} onClose={() => setShowCarousel(false)} />
-        )}
-      </AnimatePresence>
+              {/* Videos si existen */}
+              {videos.length > 0 && (
+                <div className="mb-3 space-y-3">
+                  {videos.map((videoSrc, i) => (
+                    <div key={i} className="relative">
+                      <video 
+                        controls 
+                        className="w-full h-32 object-cover rounded"
+                        poster={images[0]}
+                      >
+                        <source src={videoSrc} type="video/mp4" />
+                        Tu navegador no soporta video HTML5.
+                      </video>
+                      {videos.length > 1 && (
+                        <span className="absolute top-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+                          Video {i + 1}/{videos.length}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center text-gray-500 text-xs mb-3">
+                <div className="mr-1">
+                  <Icons.Calendar size={12} />
+                </div>
+                Publicado: {dateStr}
+              </div>
+              
+              <a
+                href={whatsappUrl}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors"
+                onClick={e => e.stopPropagation()}
+              >
+                <Icons.MessageCircle size={16} /> Consultar por WhatsApp
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showCarousel && (
+        <PropertyImageCarousel images={images} onClose={() => setShowCarousel(false)} />
+      )}
     </>
   );
 }
@@ -421,6 +497,22 @@ export default function PropertiesPage() {
       
       <WhatsappFloatingButton />
       <Footer />
+
+      <style >{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            max-height: 0;
+          }
+          to {
+            opacity: 1;
+            max-height: 2000px;
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+      `}</style>
     </>
   );
 }
